@@ -232,10 +232,7 @@
 
         <!-- Actions -->
         <div class="actions">
-            <a href="{{ route('match.downloadExcel', $download_token) }}" class="btn btn-primary">
-                📊 Download Excel (Highlighted)
-            </a>
-            <a href="{{ route('match.download', $download_token) }}" class="btn btn-secondary">
+            <a href="{{ route('match.download', $download_token) }}" class="btn btn-primary">
                 📥 Download CSV
             </a>
             <a href="{{ route('match.index') }}" class="btn btn-secondary">
