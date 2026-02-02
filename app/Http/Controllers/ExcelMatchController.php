@@ -6,6 +6,7 @@ use App\Http\Requests\UploadExcelRequest;
 use App\Http\Requests\RunMatchRequest;
 use App\Services\Excel\ExcelReader;
 use App\Services\Matching\Matcher;
+use App\Services\Excel\ExcelExporter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -14,11 +15,13 @@ class ExcelMatchController extends Controller
 {
     protected $excelReader;
     protected $matcher;
+    protected $excelExporter;
 
-    public function __construct(ExcelReader $excelReader, Matcher $matcher)
+    public function __construct(ExcelReader $excelReader, Matcher $matcher, ExcelExporter $excelExporter)
     {
         $this->excelReader = $excelReader;
         $this->matcher = $matcher;
+        $this->excelExporter = $excelExporter;
     }
 
     /**
@@ -154,13 +157,17 @@ class ExcelMatchController extends Controller
             $matchedRows = count(array_filter($results, fn($r) => $r['score'] >= $threshold));
             $possibleMatches = count(array_filter($results, fn($r) => $r['score'] >= 70 && $r['score'] < $threshold));
 
-            // Store results in session for download
+            // Store results, threshold, and File 2 info in session for download
             $downloadToken = Str::random(32);
-            session(['match_results_' . $downloadToken => $results]);
+            session([
+                'match_results_' . $downloadToken => $results,
+                'match_threshold_' . $downloadToken => $threshold,
+                'match_file2_path_' . $downloadToken => $request->file2_path,
+                'match_file2_sheet_' . $downloadToken => $request->file2_sheet
+            ]);
 
-            // Clean up uploaded files
+            // Clean up File 1 only (keep File 2 for Excel export)
             Storage::delete($request->file1_path);
-            Storage::delete($request->file2_path);
 
             return view('match.results', [
                 'results' => $results,
@@ -232,5 +239,40 @@ class ExcelMatchController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    /**
+     * Download results as Excel with highlighted rows
+     */
+    public function downloadExcel(Request $request, string $token)
+    {
+        $results = session('match_results_' . $token);
+        $threshold = session('match_threshold_' . $token, 85);
+        $file2Path = session('match_file2_path_' . $token);
+        $file2Sheet = session('match_file2_sheet_' . $token);
+
+        if (!$results || !$file2Path) {
+            abort(404, 'Results not found or expired.');
+        }
+
+        try {
+            // Get full path to File 2
+            $file2FullPath = Storage::path($file2Path);
+
+            // Generate Excel file with highlighting
+            $filePath = $this->excelExporter->exportWithHighlighting($file2FullPath, $file2Sheet, $results, $threshold);
+
+            // Clean up File 2 after generating Excel
+            Storage::delete($file2Path);
+
+            // Return file download and delete after sending
+            return response()->download($filePath)->deleteFileAfterSend(true);
+        } catch (\Exception $e) {
+            // Clean up File 2 on error
+            if ($file2Path) {
+                Storage::delete($file2Path);
+            }
+            return back()->withErrors(['error' => 'Error generating Excel file: ' . $e->getMessage()]);
+        }
     }
 }

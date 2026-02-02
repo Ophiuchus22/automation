@@ -16,6 +16,7 @@ Route::get('/match', [App\Http\Controllers\ExcelMatchController::class, 'index']
 Route::post('/match/upload', [App\Http\Controllers\ExcelMatchController::class, 'upload'])->name('match.upload');
 Route::post('/match/run', [App\Http\Controllers\ExcelMatchController::class, 'run'])->name('match.run');
 Route::get('/match/download/{token}', [App\Http\Controllers\ExcelMatchController::class, 'download'])->name('match.download');
+Route::get('/match/download-excel/{token}', [App\Http\Controllers\ExcelMatchController::class, 'downloadExcel'])->name('match.downloadExcel');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
