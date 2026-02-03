@@ -13,15 +13,15 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f5f5f5;
             min-height: 100vh;
             padding: 40px 20px;
         }
 
         .container {
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             max-width: 1400px;
             width: 100%;
             margin: 0 auto;
@@ -48,19 +48,22 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: #f8f9fa;
+            color: #333;
             padding: 20px;
-            border-radius: 12px;
+            border-radius: 4px;
             text-align: center;
+            border: 1px solid #dee2e6;
         }
 
         .stat-card.success {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            background: #f8f9fa;
+            border-color: #6c757d;
         }
 
         .stat-card.warning {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: #f8f9fa;
+            border-color: #adb5bd;
         }
 
         .stat-value {
@@ -71,7 +74,7 @@
 
         .stat-label {
             font-size: 13px;
-            opacity: 0.9;
+            color: #6c757d;
         }
 
         .actions {
@@ -83,17 +86,17 @@
         .btn {
             padding: 12px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: 4px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: background 0.2s ease;
             text-decoration: none;
             display: inline-block;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #495057;
             color: white;
         }
 
@@ -103,8 +106,7 @@
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            opacity: 0.9;
         }
 
         .table-wrapper {
@@ -209,8 +211,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>✅ Matching Results</h1>
-        <p class="subtitle">Review matched records and download results</p>
+        <h1>Matching Results</h1>
 
         <!-- Statistics -->
         <div class="stats">
@@ -232,9 +233,6 @@
 
         <!-- Actions -->
         <div class="actions">
-            <a href="{{ route('match.download', $download_token) }}" class="btn btn-primary">
-                📥 Download CSV
-            </a>
             <a href="{{ route('match.index') }}" class="btn btn-secondary">
                 ← Upload New Files
             </a>

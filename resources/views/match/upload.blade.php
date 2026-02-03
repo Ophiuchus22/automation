@@ -13,7 +13,7 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f5f5f5;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -23,8 +23,8 @@
 
         .container {
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             max-width: 600px;
             width: 100%;
             padding: 40px;
@@ -82,42 +82,41 @@
 
         .file-input-label:hover {
             background: #e9ecef;
-            border-color: #667eea;
+            border-color: #adb5bd;
         }
 
         .file-input-label.has-file {
-            background: #e7f3ff;
-            border-color: #667eea;
-            color: #667eea;
+            background: #e9ecef;
+            border-color: #495057;
+            color: #495057;
         }
 
         .file-name {
             margin-top: 8px;
             font-size: 13px;
-            color: #667eea;
+            color: #495057;
             font-weight: 500;
         }
 
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #495057;
             color: white;
             padding: 14px 32px;
             border: none;
-            border-radius: 8px;
+            border-radius: 4px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
             width: 100%;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: background 0.2s ease;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+            background: #343a40;
         }
 
         .btn:active {
-            transform: translateY(0);
+            background: #212529;
         }
 
         .alert {
@@ -134,8 +133,8 @@
         }
 
         .info-box {
-            background: #f0f7ff;
-            border-left: 4px solid #667eea;
+            background: #f8f9fa;
+            border-left: 3px solid #6c757d;
             padding: 15px;
             margin-bottom: 25px;
             border-radius: 4px;
@@ -144,14 +143,12 @@
         }
 
         .info-box strong {
-            color: #667eea;
+            color: #333;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📊 Excel File Matcher</h1>
-        <p class="subtitle">Upload two Excel files to find matching records with intelligent fuzzy matching</p>
 
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -164,13 +161,6 @@
             </div>
         @endif
 
-        <div class="info-box">
-            <strong>📋 Instructions:</strong><br>
-            • File 1: Your master list or basis file<br>
-            • File 2: Municipality file or file to check against File 1<br>
-            • Both files must be .xls or .xlsx format (max 10MB each)
-        </div>
-
         <form action="{{ route('match.upload') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
@@ -179,7 +169,7 @@
                 <div class="file-input-wrapper">
                     <input type="file" name="file1" id="file1" accept=".xls,.xlsx" required>
                     <label for="file1" class="file-input-label" id="file1-label">
-                        <span>📁 Click to select File 1 (.xls or .xlsx)</span>
+                        <span>Click to select File 1 (.xls or .xlsx)</span>
                     </label>
                 </div>
                 <div id="file1-name" class="file-name"></div>
@@ -190,7 +180,7 @@
                 <div class="file-input-wrapper">
                     <input type="file" name="file2" id="file2" accept=".xls,.xlsx" required>
                     <label for="file2" class="file-input-label" id="file2-label">
-                        <span>📁 Click to select File 2 (.xls or .xlsx)</span>
+                        <span>Click to select File 2 (.xls or .xlsx)</span>
                     </label>
                 </div>
                 <div id="file2-name" class="file-name"></div>

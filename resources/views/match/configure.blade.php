@@ -13,15 +13,15 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f5f5f5;
             min-height: 100vh;
             padding: 40px 20px;
         }
 
         .container {
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             max-width: 800px;
             width: 100%;
             margin: 0 auto;
@@ -58,9 +58,9 @@
 
         .section-title::before {
             content: '';
-            width: 4px;
+            width: 3px;
             height: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #6c757d;
             margin-right: 10px;
             border-radius: 2px;
         }
@@ -94,7 +94,7 @@
 
         select:focus, input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #6c757d;
         }
 
         .radio-group {
@@ -130,25 +130,24 @@
         }
 
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #495057;
             color: white;
             padding: 14px 32px;
             border: none;
-            border-radius: 8px;
+            border-radius: 4px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
             width: 100%;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: background 0.2s ease;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+            background: #343a40;
         }
 
         .btn:active {
-            transform: translateY(0);
+            background: #212529;
         }
 
         .alert {
@@ -170,10 +169,6 @@
             margin-top: 5px;
         }
 
-        #person-columns {
-            display: none;
-        }
-
         .slider-container {
             display: flex;
             align-items: center;
@@ -186,7 +181,7 @@
 
         .slider-value {
             font-weight: 600;
-            color: #667eea;
+            color: #495057;
             min-width: 40px;
             text-align: center;
         }
@@ -194,8 +189,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>⚙️ Configure Matching</h1>
-        <p class="subtitle">Select sheets, columns, and matching options</p>
+        <h1>Configure Matching</h1>
 
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -236,53 +230,20 @@
                 </div>
             </div>
 
-            <!-- Match Mode -->
-            <div class="section">
-                <div class="section-title">Match Mode</div>
-                <div class="form-group">
-                    <label>What are you matching?</label>
-                    <div class="radio-group">
-                        <label class="radio-option">
-                            <input type="radio" name="match_mode" value="business" checked>
-                            <span>Business / Establishment Names</span>
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="match_mode" value="person">
-                            <span>Person Names (First + Last)</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
             <!-- Column Selection -->
             <div class="section">
                 <div class="section-title">Column Selection</div>
                 
                 <div class="form-group">
-                    <label for="file1_column">File 1 Key Column (e.g., B)</label>
+                    <label for="file1_column">File 1 Business/Establishment Column (e.g., B)</label>
                     <input type="text" name="file1_column" id="file1_column" value="B" placeholder="B" required>
-                    <p class="info-text">Column containing business names or person names in File 1</p>
+                    <p class="info-text">Column containing business or establishment names in File 1</p>
                 </div>
 
-                <div id="business-columns">
-                    <div class="form-group">
-                        <label for="file2_column">File 2 Business Column (e.g., D)</label>
-                        <input type="text" name="file2_column" id="file2_column" value="D" placeholder="D">
-                        <p class="info-text">Column containing business names in File 2</p>
-                    </div>
-                </div>
-
-                <div id="person-columns">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="file2_first_name_column">File 2 First Name Column (e.g., E)</label>
-                            <input type="text" name="file2_first_name_column" id="file2_first_name_column" value="E" placeholder="E">
-                        </div>
-                        <div class="form-group">
-                            <label for="file2_last_name_column">File 2 Last Name Column (e.g., F)</label>
-                            <input type="text" name="file2_last_name_column" id="file2_last_name_column" value="F" placeholder="F">
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="file2_column">File 2 Business/Establishment Column (e.g., D)</label>
+                    <input type="text" name="file2_column" id="file2_column" value="D" placeholder="D" required>
+                    <p class="info-text">Column containing business or establishment names in File 2</p>
                 </div>
             </div>
 
@@ -320,28 +281,11 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn">🚀 Run Match</button>
+            <button type="submit" class="btn">Run Match</button>
         </form>
     </div>
 
     <script>
-        // Match mode toggle
-        const matchModeRadios = document.querySelectorAll('input[name="match_mode"]');
-        const businessColumns = document.getElementById('business-columns');
-        const personColumns = document.getElementById('person-columns');
-
-        matchModeRadios.forEach(radio => {
-            radio.addEventListener('change', function() {
-                if (this.value === 'business') {
-                    businessColumns.style.display = 'block';
-                    personColumns.style.display = 'none';
-                } else {
-                    businessColumns.style.display = 'none';
-                    personColumns.style.display = 'block';
-                }
-            });
-        });
-
         // Threshold slider
         const thresholdSlider = document.getElementById('threshold');
         const thresholdValue = document.getElementById('threshold-value');
